@@ -3,18 +3,16 @@ import streamlit as st
 import pandas as pd
 import joblib
 
-# Título
+
 st.header("Previsão de Reclamação de Seguro Automóvel")
 st.subheader("Classificação com modelo treinado")
 
-# Dicionários de codificação manual
 age_dict = {'16-25': 0, '26-39': 1, '40-64': 2, '65+': 3}
 exp_dict = {'0-9y': 0, '10-19y': 1, '20-29y': 2, '30y+': 3}
 edu_dict = {'none': 0, 'high school': 1, 'university': 2}
 inc_dict = {'poverty': 0, 'working class': 1, 'middle class': 2, 'upper class': 3}
 year_dict = {'before 2015': 0, 'after 2015': 1}
 
-# Inputs com labels legíveis
 age = st.selectbox("Idade", list(age_dict.keys()))
 driving_exp = st.selectbox("Experiência de condução", list(exp_dict.keys()))
 education = st.selectbox("Educação", list(edu_dict.keys()))
@@ -34,7 +32,6 @@ speeding_violations = st.number_input("Nº infrações de velocidade", min_value
 duis = st.number_input("Nº de DUIs", min_value=0)
 past_accidents = st.number_input("Nº de acidentes anteriores", min_value=0)
 
-# Codificar para valores numéricos
 age = age_dict[age]
 driving_exp = exp_dict[driving_exp]
 education = edu_dict[education]
@@ -47,13 +44,10 @@ vehicle_ownership = 1 if vehicle_ownership == 'Sim' else 0
 married = 1 if married == 'Sim' else 0
 children = 1 if children == 'Sim' else 0
 
-# Botão para previsão
 if st.button("Prever Reclamação"):
 
-    # Carregar modelo
     modelo = joblib.load("modelo_final.pkl")
 
-    # Criar DataFrame com a ordem correta
     df = pd.DataFrame([[
         age, driving_exp, education, income, vehicle_year,
         gender_male, vehicle_type_sportscar,
@@ -68,10 +62,8 @@ if st.button("Prever Reclamação"):
 
     st.dataframe(df)
 
-    # Fazer previsão
     prediction = modelo.predict(df)[0]
 
-    # Mostrar resultado
     st.subheader("Resultado da Previsão:")
     if prediction == 1:
         st.error("O cliente  irá apresentar uma reclamação.")
